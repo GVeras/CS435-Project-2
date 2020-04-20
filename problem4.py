@@ -29,41 +29,39 @@ class DirectedGraph(Graph):
 class TopSort:
     def Kahns(self, graph: DirectedGraph) -> List:
         path=[]
-        visited=[]
+        visitedset()
         queue=self.getZeroDegreedNodes(graph,visited)
-        visited=list(queue)
+        visited=set(queue) #make a copy of an already made set
         while queue:
             currNode=queue.pop()
-            path.append(currNode)
-            if queue==[]:
+            path.add(currNode)
+            if len(queue)==1:
                 queue=self.getZeroDegreedNodes(graph,visited)
-                visited.extend(queue)
+                visited.union(queue)
         return path
     
-    def getZeroDegreedNodes(self,graph: Graph,visited: List) -> List:
-        res=set(graph.nodes.keys())-set(visited)
-        allNodes=graph.getAllNodes()
+    def getZeroDegreedNodes(self,graph: Graph,visited: Set) -> List:
+        res=set(graph.nodes.keys())-visited
         allNeighbors=[]
-        for node in allNodes:
+        for node in graph.getAllNodes():
             if node.val not in visited:
                     allNeighbors.extend(node.neighbors)    
         allNeighbors=[node.val for node in allNeighbors] 
-        return list(res-set(allNeighbors))
+        return res-set(allNeighbors)
     
     def mDFS(self, graph: DirectedGraph) -> List:
         path=list()
         for node in graph.getAllNodes():
             if node.val not in path:
                 self.mDFSHelper(node,path)
-        return path
+        return path[::-1]
     
     def mDFSHelper(self, node: Node, path: List) -> List:
-        path.insert(0,node.val)
+        path.append(node.val)
         if node.val not in path:
             neighbors=set(node.neighbors)-set(path)
-            if len(neighbors)!=0:
-                for neighbor in neighbors:
-                    self.mDFSHelper(neighbor,path)
+            for neighbor in neighbors:
+                   self.mDFSHelper(neighbor,path)
 
 def createRandomDAGIter(n: int) -> DirectedGraph:
     randomGraph=DirectedGraph()
