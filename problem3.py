@@ -38,8 +38,10 @@ class Graph:
             self.nodes[first.val].neighbors.append(second)
         if first not in self.nodes[second.val].neighbors: 
             self.nodes[second.val].neighbors.append(first)
+            
     def getAllNodes(self) -> Set:
         return set(self.nodes.values())
+    
     def getPointer(self, nodeVal: str) -> Node:
         for nodePointer in self.getAllNodes():
             if nodePointer.val==nodeVal:
@@ -71,7 +73,7 @@ class GraphSearch:
         path,visited=[],[]
         stack=[start]
 
-        while stack!=None:
+        while stack:
             currNode=stack.pop()
             if currNode.val not in visited:
                 path.append(currNode.val)
@@ -79,7 +81,6 @@ class GraphSearch:
                     break
                 visited.append(currNode.val)
                 stack.extend(currNode.neighbors[::-1]) 
-                #So the recursive and iterative can have the same result to compare when reviewing, I reversed the neighbors list :)
 
         if path==[] or (end.val not in path):
             return None
@@ -124,6 +125,7 @@ class GraphSearch:
                     nextLevel=[]
         return path
                 
+        
 #Main program
 def createLinkedList(n: int) -> Graph:
     linkedList=Graph()
@@ -133,6 +135,7 @@ def createLinkedList(n: int) -> Graph:
             #Get the pointer for the first and second node.
             linkedList.addUndirectedEdge(linkedList.getPointer(str(i)),linkedList.getPointer(str(i-1)))
     return linkedList
+
 
 def createRandomUnweightedGraphIter(n: int) -> Graph:
     randomGraph=Graph()
@@ -147,6 +150,7 @@ def createRandomUnweightedGraphIter(n: int) -> Graph:
             randomNum=random.randint(0,99)
             
     return randomGraph
+
 
 def BFTRecLinkedList(graph: Graph) -> List:
     search=GraphSearch()
@@ -163,15 +167,25 @@ def BFTIterLinkedList(graph: Graph) -> List:
 search=GraphSearch()
 
 LL=createLinkedList(100) #0-baseed indexing
-#print(LL) #to view the list
+print(LL) #to view the list
 
-##print(search.DFSRec(LL.getPointer("5"),LL.getPointer("10")))
-##print(search.DFSIter(LL.getPointer("5"),LL.getPointer("10")))
+print(search.DFSRec(LL.getPointer("5"),LL.getPointer("10")))
+print(search.DFSIter(LL.getPointer("5"),LL.getPointer("10")))
+print(BFTRecLinkedList(LL))
+print(BFTIterLinkedList(LL))
 
-#rand=createRandomUnweightedGraphIter(9) #numbers 0-8
-#print(rand)
-#print(search.DFSRec(rand.getPointer("0"),rand.getPointer("8")))
-#print(search.DFSIter(rand.getPointer("0"),rand.getPointer("8")))
+LL=createLinkedList(10000) 
+print(LL) 
+print(search.DFSRec(LL.getPointer("0"),LL.getPointer("9000")))
+print(search.DFSIter(LL.getPointer("8000"),LL.getPointer("8555")))
 
-# BFTRecLinkedList(LL)
-# BFTIterLinkedList(LL)
+rand=createRandomUnweightedGraphIter(9) #numbers 0-8
+print(rand)
+print(search.DFSRec(rand.getPointer("0"),rand.getPointer("8")))
+print(search.DFSIter(rand.getPointer("0"),rand.getPointer("8")))
+
+rand=createRandomUnweightedGraphIter(1000)
+print(rand)
+print(search.DFSRec(rand.getPointer("86"),rand.getPointer("990")))
+print(search.DFSIter(rand.getPointer("422"),rand.getPointer("455")))
+
